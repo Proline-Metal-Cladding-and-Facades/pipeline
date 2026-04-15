@@ -164,6 +164,7 @@ const[nvo,sNvo]=useState({project:"",type:"VO",varNo:"",varName:"",ds:"",da:"",p
 const sub=n=>{localStorage.setItem(UK,n);sU(n)};
 const togM=m=>sSM(p=>p.includes(m)?p.filter(x=>x!==m):[...p,m]);
 const togExp=nm=>sExp(p=>({...p,[nm]:!p[nm]}));
+const syncScroll=e=>{const sl=e.target.scrollLeft;document.querySelectorAll('.ss').forEach(el=>{if(el!==e.target)el.scrollLeft=sl})};
 
 const load=useCallback(async()=>{
   sLd(true);sEr(null);const r=await aG("getAll");
@@ -228,8 +229,8 @@ return<div className="app">
 {vw==="grid"&&<>
 <div className="mn2"><button onClick={()=>sSc(Math.max(0,sc-3))}>←</button><span>{vis[0]} — {vis[vis.length-1]}</span><button onClick={()=>sSc(Math.min(12,sc+3))}>→</button><div style={{flex:1}}/><button onClick={()=>sSc(0)}>25</button><button onClick={()=>sSc(12)}>26</button>{selM.length>0&&<button onClick={()=>sSM([])} style={{color:"var(--pu)"}}>Clear</button>}</div>
 
-{/* ====== MAIN TABLE - same 19-col grid as working version ====== */}
-<div className="gc" style={{maxHeight:"55vh",overflowY:"auto"}}><div className="g" style={{gridTemplateColumns:gC}}>
+{/* ====== MAIN TABLE ====== */}
+<div className="gc ss" onScroll={syncScroll} style={{maxHeight:"55vh",overflowY:"auto"}}><div className="g" style={{gridTemplateColumns:gC}}>
 <div className="gh"><div>Project</div><div style={{color:"var(--am)"}}>Contract</div><div style={{color:"var(--am)"}}>Var.</div><div style={{color:"var(--pu)"}}>Appr.VOs</div><div>Total</div><div>Claimed</div><div>To Alloc.</div>
 {vis.map(m=><div key={m} className={selM.includes(m)?"ms":""} onClick={()=>togM(m)}>{m}</div>)}</div>
 
@@ -268,7 +269,7 @@ return<div className="pg" key={p.i}>
 
 {/* ====== NO OF WEEKS (aligned with months via padding) ====== */}
 {/* No of Weeks - same grid for alignment */}
-<div style={{marginTop:6,border:"1px solid var(--am)",borderRadius:4,overflow:"hidden"}}><div className="g" style={{gridTemplateColumns:gC,background:"var(--s2)"}}>
+<div className="ss" onScroll={syncScroll} style={{marginTop:6,border:"1px solid var(--am)",borderRadius:4,overflowX:"auto"}}><div className="g" style={{gridTemplateColumns:gC,background:"var(--s2)"}}>
 <div style={{gridColumn:"1/8",padding:"4px 8px",fontWeight:800,fontSize:10,color:"var(--am)",textTransform:"uppercase",letterSpacing:".3px",position:"sticky",left:0,background:"var(--s2)"}}>No. of Weeks</div>
 {vis.map(m=><div key={m} style={{padding:"4px 6px",textAlign:"right",fontFamily:"var(--mn)",fontSize:11,fontWeight:700,color:"var(--am)"}}>{countWed(m)}</div>)}
 </div></div>
@@ -278,7 +279,7 @@ return<div className="pg" key={p.i}>
 {pjO?"▾":"▸"} PROJECTED <span className="tog">{pjO?"collapse":"expand"}</span>
 
 </div>
-{pjO&&<div className="sum-body"><div className="g" style={{gridTemplateColumns:gC}}>
+{pjO&&<div className="sum-body ss" onScroll={syncScroll}><div className="g" style={{gridTemplateColumns:gC}}>
 <div className="sr"><div className="slbl" style={{color:"var(--am)",fontSize:8}}>🔒 Lock Month</div>{vis.map(m=><div key={m} style={{textAlign:"center",padding:"2px 0"}}><button className={"lk"+(isLk(m)?" on":"")} onClick={()=>doLock(m)} title={m} style={{width:"100%"}}>{isLk(m)?"🔒":"🔓"}</button></div>)}</div>
 <div className="sr sr-c"><div className="slbl">Projected Sales</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} style={{fontWeight:600}}>{fm(lk?gv(LS,m,"Sales"):(sumM[m]?.s||0))}</div>})}</div>
 <div className="sr sr-c"><div className="slbl">External Materials</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} style={{color:"var(--rd)"}}>{fm(lk?gv(LE,m,"Sales"):(sumM[m]?.e||0))}</div>})}</div>
@@ -292,7 +293,7 @@ return<div className="pg" key={p.i}>
 <div className="sum-hdr sum-hdr-a" onClick={()=>sAcO(!acO)}>
 {acO?"▾":"▸"} ACTUAL <span className="tog">{acO?"collapse":"expand"}</span>
 </div>
-{acO&&<div className="sum-body"><div className="g" style={{gridTemplateColumns:gC}}>
+{acO&&<div className="sum-body ss" onScroll={syncScroll}><div className="g" style={{gridTemplateColumns:gC}}>
 <div className="sr sr-c"><div className="slbl">Actual Sales</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} style={{fontWeight:600}}>{lk?fm(sumM[m]?.s||0):""}</div>})}</div>
 <div className="sr sr-c"><div className="slbl">External Materials</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} style={{color:"var(--rd)"}}>{lk?fm(sumM[m]?.e||0):""}</div>})}</div>
 <div className="sr sr-c"><div className="slbl">ProFab Materials</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} style={{color:"var(--rd)"}}>{lk?fm(sumM[m]?.p||0):""}</div>})}</div>
