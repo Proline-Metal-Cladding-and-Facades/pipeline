@@ -248,10 +248,7 @@ const gpM=m=>gv(p.nm,m,"Sales")-gv(p.nm,m,"ExtMaterials")-gv(p.nm,m,"ProfabMater
 return<div className="pg" key={p.i}>
 {/* Project row = Sales (Status+JobID inside first cell) */}
 <div className="pr">
-<div style={{display:"flex",flexDirection:"column",gap:2,width:"100%"}}>
-<div style={{display:"flex",alignItems:"center",gap:3}}><button className="xb" onClick={()=>dPj(p.nm)}>×</button><EN value={p.nm} onSave={nw=>renP(p.nm,nw)}/></div>
-<div style={{display:"flex",alignItems:"center",gap:3}}><button className="eb" onClick={()=>togExp(p.nm)}>{open?"−":"+"}</button><span className={"st-tag "+(p.st==="Live"?"st-live":"st-done")} onClick={()=>uP(p.nm,"Status",p.st==="Live"?"Completed":"Live")}>{p.st==="Live"?"LIVE":"DONE"}</span><input className="jid-tag" value={p.jid} onChange={e=>uP(p.nm,"Job ID",e.target.value)} placeholder="ID"/></div>
-</div>
+<button className="xb" onClick={()=>dPj(p.nm)}>×</button><button className="eb" onClick={()=>togExp(p.nm)}>{open?"−":"+"}</button><span className={"st-tag "+(p.st==="Live"?"st-live":"st-done")} onClick={()=>uP(p.nm,"Status",p.st==="Live"?"Completed":"Live")}>{p.st==="Live"?"LIVE":"DONE"}</span><input className="jid-tag" value={p.jid} onChange={e=>uP(p.nm,"Job ID",e.target.value)} placeholder="ID"/><EN value={p.nm} onSave={nw=>renP(p.nm,nw)}/>
 <div><EC value={p.cp} onChange={v=>uP(p.nm,"Contract Price",v)} cls="cl ce"/></div>
 <div><EC value={p.v} onChange={v=>uP(p.nm,"Variations",v)} cls="cl ce"/></div>
 <div style={{color:"var(--pu)",fontStyle:"italic"}}>{p.avo?fm(p.avo):"-"}</div>
