@@ -278,7 +278,7 @@ return<div className="app">
 <div className="hd"><div className="hl"><h1>Pipeline Mastersheet</h1><span className="dot" style={{background:sv?"var(--am)":"var(--gn)"}}/><span className="dx" style={{color:sv?"var(--am)":"var(--gn)"}}>{sv?"Saving...":"Connected"}</span></div>
 <div className="hr"><span className="ub">👤 {un}</span>{ls&&<span className="sv">Saved {ls.toLocaleTimeString("en-AU",{hour:"2-digit",minute:"2-digit"})}</span>}<button className="rb" onClick={load}>↻ Sync</button></div></div>
 {er&&<div className="er">{er}</div>}
-{db&&<div className="db">{db}</div>}
+
 {ld?<div className="ld"><div className="sp2"/><p>Loading...</p></div>:<>
 {selM.length>0&&<div style={{fontSize:8,color:"var(--pu)",fontWeight:700,marginBottom:3}}>Filtered: {cd.label} <button style={{background:"none",border:"none",color:"var(--t2)",cursor:"pointer",fontSize:8,fontFamily:"var(--ft)"}} onClick={()=>sSM([])}>✕ Clear</button></div>}
 <div className="cds">
@@ -299,7 +299,7 @@ return<div className="app">
 {sa&&<div className="af"><div><label>Project</label><input value={nn} onChange={e=>sNn(e.target.value)} placeholder="2140 - Project" style={{width:200}}/></div><div><label>Contract</label><input value={nc} onChange={e=>sNc(e.target.value)} placeholder="500000" style={{width:90}}/></div><button className="pl gn" onClick={aPj}>Add</button><button className="pl" onClick={()=>sSa(false)}>Cancel</button></div>}
 
 {vw==="grid"&&<>
-<div className="ht"><b>Double-click</b> any cell to edit (names, numbers). <span style={{color:"var(--am)"}}>Gold</span>=editable. <span style={{color:"var(--pu)"}}>Purple</span>=auto VO Register. Click <b>month headers</b> to multi-filter cards. GP = Sales Total - Ext Total - ProFab Total - Other Total.</div>
+
 <div className="mn2"><button onClick={()=>sSc(Math.max(0,sc-3))}>←</button><span>{vis[0]}—{vis[vis.length-1]}</span><button onClick={()=>sSc(Math.min(12,sc+3))}>→</button><div style={{flex:1}}/><button onClick={()=>sSc(0)}>25</button><button onClick={()=>sSc(12)}>26</button>{selM.length>0&&<button onClick={()=>sSM([])} style={{color:"var(--pu)"}}>Clear</button>}</div>
 <div className="gc" style={{maxHeight:"62vh",overflowY:"auto"}}><div className="g" style={{gridTemplateColumns:gC}}>
 <div className="gh"><div>Project</div><div style={{color:"var(--am)"}}>Contract</div><div style={{color:"var(--am)"}}>Var.</div><div style={{color:"var(--pu)"}}>Appr.VOs</div><div>Total</div><div>Claimed</div><div>To Alloc.</div>
