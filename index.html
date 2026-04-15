@@ -100,17 +100,19 @@
 .wk-vals{display:flex;gap:0;flex:1}
 .wk-v{width:72px;text-align:center;font-family:var(--mn);font-size:11px;font-weight:700;color:var(--am);padding:2px 0}
 /* VO */
-.vw{border:1px solid var(--bd);border-radius:6px;background:var(--s1);overflow:hidden}
-.vhd{padding:8px 12px;background:var(--s2);border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px}
+.vw{border:1px solid var(--bd);border-radius:4px;background:#fff;overflow:hidden}
+.vhd{padding:6px 12px;background:#fff;border-bottom:1px solid var(--bd);display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;gap:6px}
 .vhd h3{font-size:12px;font-weight:700;color:var(--pu)}
 .vsc{overflow-x:auto;max-height:60vh;overflow-y:auto}
-.vt{width:100%;border-collapse:collapse;font-size:10px}
-.vt th{text-align:left;padding:5px 7px;font-size:8px;color:var(--t2);text-transform:uppercase;font-weight:700;border-bottom:1px solid var(--bd);background:var(--s2);position:sticky;top:0;z-index:1;white-space:nowrap}
-.vt th.tg{border-top:2px solid var(--gn)}.vt th.ty{border-top:2px solid var(--am)}.vt th.tp{border-top:2px solid var(--pu)}
-.vt td{padding:4px 7px;border-bottom:1px solid rgba(45,52,80,.3)}
-.vt input,.vt select{background:var(--bg);border:1px solid var(--bd);color:var(--tx);padding:2px 4px;border-radius:3px;font-family:var(--ft);font-size:10px;outline:none}
-.vt input:focus,.vt select:focus{border-color:var(--ac)}
-.vt input.nm{text-align:right;font-family:var(--mn);width:75px}.vt input.sm{width:65px}.vt input.md{width:120px}
+.vt{width:100%;border-collapse:collapse;font-size:10px;font-family:var(--mn)}
+.vt th{text-align:left;padding:6px 8px;font-size:9px;color:var(--tx);font-weight:700;border:1px solid var(--bd);background:var(--s2);position:sticky;top:0;z-index:1;white-space:nowrap}
+.vt th.tg{background:#e8f5e9;color:#2e7d32}.vt th.ty{background:#fff8e1;color:#f57f17}.vt th.tp{background:#f3e5f5;color:#7b1fa2}
+.vt td{padding:4px 8px;border:1px solid var(--bd);background:#fff}
+.vt tr:nth-child(even) td{background:#f8f9fb}
+.vt tr:hover td{background:rgba(68,114,196,.08)}
+.vt input,.vt select{background:transparent;border:none;color:var(--tx);padding:2px 0;font-family:var(--mn);font-size:10px;outline:none;width:100%}
+.vt input:focus,.vt select:focus{background:rgba(68,114,196,.06);border-bottom:1px solid var(--ac)}
+.vt input.nm{text-align:right;width:80px}.vt input.sm{width:70px}.vt input.md{width:130px}
 .sa{background:rgba(52,211,153,.15)!important;color:var(--gn)!important}.sp3{background:rgba(248,113,113,.15)!important;color:var(--rd)!important}.srej{background:rgba(107,114,128,.2)!important;color:#6b7280!important}
 
 .sum-body{border:1px solid var(--bd);border-top:none;border-radius:0 0 4px 4px;overflow-x:auto;background:var(--s1)}
@@ -190,6 +192,8 @@
 .rh{background:#dce6f5!important}
 .ch{background:#e8edf7!important}
 .rh.ch{background:#cddaf0!important}
+
+.cl-wk{color:var(--tx)!important;text-align:center!important;font-weight:700}
 /* Cell selection + status bar */
 .cl.sel{outline:1px solid var(--ac);background:rgba(91,141,239,.12)!important}
 .stat-bar{position:fixed;bottom:0;left:0;right:0;background:var(--s2);border-top:1px solid var(--bd);padding:3px 12px;display:flex;gap:16px;align-items:center;justify-content:flex-end;font-size:9px;color:var(--t2);font-family:var(--mn);z-index:40;height:22px}
@@ -372,7 +376,7 @@ return<div className="pg" key={p.i}>
 {/* No of Weeks - same grid for alignment */}
 <div className="ss" onScroll={syncScroll} style={{marginTop:6,border:"1px solid var(--am)",borderRadius:4,overflowX:"auto"}}><div className="g" style={{gridTemplateColumns:gC,background:"var(--s2)"}}>
 <div style={{gridColumn:"1/8",padding:"4px 8px",fontWeight:800,fontSize:10,color:"var(--tx)",textTransform:"uppercase",letterSpacing:".3px",position:"sticky",left:0,background:"var(--s2)"}}>No. of Weeks</div>
-{vis.map(m=><div key={m} style={{padding:"4px 6px",textAlign:"center",fontFamily:"var(--mn)",fontSize:10,fontWeight:700,color:"var(--tx)",...(m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.1)"}:{})}}>{countWed(m)}</div>)}
+{vis.map(m=>{const manual=gv(WK,m,"Sales");const val=manual||countWed(m);return<div key={m} style={{padding:"2px 6px",textAlign:"center",...(m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.1)"}:{})}}><EC value={val} onChange={v=>uC(WK,m,"Sales",v)} cls="cl cl-wk"/></div>})}
 </div></div>
 
 {/* ====== PROJECTED (collapsible, same grid) ====== */}
