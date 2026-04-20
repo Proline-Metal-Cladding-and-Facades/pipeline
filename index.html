@@ -212,6 +212,9 @@
 
 .cl.tent{color:var(--rd)!important;font-style:italic;position:relative}
 .cl.tent::after{content:"*";position:absolute;top:-2px;right:-1px;font-size:6px;color:var(--rd)}
+
+/* Freeze panes for summary tables */
+.sr>div:first-child,.sr-t>div:first-child,.sr-w>div:first-child{border-right:2px solid var(--bd)}
 /* Cell selection + status bar */
 .cl.sel{outline:1px solid var(--ac);background:rgba(91,141,239,.12)!important}
 .stat-bar{position:fixed;bottom:0;left:0;right:0;background:var(--s2);border-top:1px solid var(--bd);padding:3px 12px;display:flex;gap:16px;align-items:center;justify-content:flex-end;font-size:9px;color:var(--t2);font-family:var(--mn);z-index:40;height:22px}
@@ -376,8 +379,8 @@ return<div className="pg" key={p.i}>
 <div style={{display:"flex",alignItems:"center",gap:2}}><button className="xb" onClick={()=>dPj(p.nm)}>×</button><EN value={p.nm} onSave={nw=>renP(p.nm,nw)} style={p.st==="Pending"?{color:"var(--rd)"}:{}}/></div>
 <div style={{display:"flex",alignItems:"center",gap:2,opacity:.7,transform:"scale(0.85)",transformOrigin:"left center"}}><button className="eb" onClick={()=>togExp(p.nm)}>{open?"−":"+"}</button><span className={"st-tag "+(p.st==="Live"?"st-live":p.st==="Pending"?"st-pend":p.st==="Awarded"?"st-awd":"st-done")} onClick={()=>uP(p.nm,"Status",p.st==="Pending"?"Awarded":p.st==="Awarded"?"Live":p.st==="Live"?"Completed":"Pending")}>{p.st==="Live"?"LIVE":p.st==="Pending"?"PENDING":p.st==="Awarded"?"AWARDED":"DONE"}</span><input className="jid-tag" value={p.jid} onChange={e=>uP(p.nm,"Job ID",e.target.value)} placeholder="ID"/></div>
 </div>
-<div className={hovOn&&hovR===p.nm?"rh":""}><EC value={p.cp} onChange={v=>uP(p.nm,"Contract Price",v)} cls="cl ce"/></div>
-<div className={hovOn&&hovR===p.nm?"rh":""}><EC value={p.v} onChange={v=>uP(p.nm,"Variations",v)} cls="cl ce"/></div>
+<div className={hovOn&&hovR===p.nm?"rh":""}><EC value={p.cp} onChange={v=>uP(p.nm,"Contract Price",v)} cls="cl ce" tentative={isTent(p.nm,"_","cp")} onContext={()=>togTent(p.nm,"_","cp")}/></div>
+<div className={hovOn&&hovR===p.nm?"rh":""}><EC value={p.v} onChange={v=>uP(p.nm,"Variations",v)} cls="cl ce" tentative={isTent(p.nm,"_","var")} onContext={()=>togTent(p.nm,"_","var")}/></div>
 <div className={hovOn&&hovR===p.nm?"rh":""} style={{color:"var(--pu)",fontStyle:"italic"}}>{p.avo?fm(p.avo):"-"}</div>
 <div className={hovOn&&hovR===p.nm?"rh":""} style={{fontWeight:800}}>{fm(p.tot)}</div>
 <div className={hovOn&&hovR===p.nm?"rh":""}>{fm(p.sT)}</div>
@@ -392,8 +395,8 @@ const cTot=bCon+bVar+avoC;
 const cClaimed=[p.eT,p.pT,p.oT][ri];
 const cTba=cTot-cClaimed;
 return<div className={"rw r"+(ri+1)} key={rk}><div className="rl">{RN[ri]}</div>
-<div><EC value={bCon} onChange={v=>uC(p.nm,"_BC",rk,v)} cls="cl ce"/></div>
-<div><EC value={bVar} onChange={v=>uC(p.nm,"_BV",rk,v)} cls="cl ce"/></div>
+<div><EC value={bCon} onChange={v=>uC(p.nm,"_BC",rk,v)} cls="cl ce" tentative={isTent(p.nm,"_BC",rk)} onContext={()=>togTent(p.nm,"_BC",rk)}/></div>
+<div><EC value={bVar} onChange={v=>uC(p.nm,"_BV",rk,v)} cls="cl ce" tentative={isTent(p.nm,"_BV",rk)} onContext={()=>togTent(p.nm,"_BV",rk)}/></div>
 <div style={{fontFamily:"var(--mn)",color:"var(--pu)",fontStyle:"italic"}}>{avoC?fm(avoC):"-"}</div>
 <div style={{fontFamily:"var(--mn)",color:"#c45e10"}}>{(cTot||cClaimed)?fm(cTot):""}</div>
 <div style={{fontFamily:"var(--mn)",color:"#c45e10"}}>{fm(cClaimed)}</div>
@@ -410,7 +413,7 @@ return<div className={"rw r"+(ri+1)} key={rk}><div className="rl">{RN[ri]}</div>
 {/* No of Weeks - same grid for alignment */}
 <div className="ss" onScroll={syncScroll} style={{marginTop:6,border:"1px solid var(--am)",borderRadius:4,overflowX:"auto"}}><div className="g" style={{gridTemplateColumns:gC,background:"var(--s2)"}}>
 <div style={{gridColumn:"1/8",padding:"4px 8px",fontWeight:800,fontSize:10,color:"var(--tx)",textTransform:"uppercase",letterSpacing:".3px",position:"sticky",left:0,background:"var(--s2)"}}>No. of Weeks</div>
-{vis.map(m=>{const manual=gv(WK,m,"Sales");const val=manual||countWed(m);return<div key={m} style={{padding:"2px 6px",textAlign:"center",...(m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.1)"}:{})}}><EC value={val} onChange={v=>uC(WK,m,"Sales",v)} cls="cl cl-wk"/></div>})}
+{vis.map(m=>{const manual=gv(WK,m,"Sales");const val=manual||countWed(m);return<div key={m} style={{padding:"2px 6px",textAlign:"center",...(m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.1)"}:{})}}><EC value={val} onChange={v=>uC(WK,m,"Sales",v)} cls="cl cl-wk" tentative={isTent(WK,m,"Sales")} onContext={()=>togTent(WK,m,"Sales")}/></div>})}
 </div></div>
 
 {/* ====== PROJECTED (collapsible, same grid) ====== */}
@@ -424,7 +427,7 @@ return<div className={"rw r"+(ri+1)} key={rk}><div className="rl">{RN[ri]}</div>
 <div className="sr sr-c"><div className={"slbl"+(hovOn&&hovR==="ext"?" rh":"")} onMouseEnter={()=>sHR("ext")} onMouseLeave={()=>sHR(null)} style={{color:"#c45e10"}}>External Materials</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} className={(hovOn&&hovR==="ext"?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR("ext");hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{color:"#c45e10"}}>{fm(lk?gv(LE,m,"Sales"):(sumM[m]?.e||0))}</div>})}</div>
 <div className="sr sr-c"><div className={"slbl"+(hovOn&&hovR==="pfab"?" rh":"")} onMouseEnter={()=>sHR("pfab")} onMouseLeave={()=>sHR(null)} style={{color:"#c45e10"}}>ProFab Materials</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} className={(hovOn&&hovR==="pfab"?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR("pfab");hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{color:"#c45e10"}}>{fm(lk?gv(LP,m,"Sales"):(sumM[m]?.p||0))}</div>})}</div>
 <div className="sr sr-c"><div className={"slbl"+(hovOn&&hovR==="oct"?" rh":"")} onMouseEnter={()=>sHR("oct")} onMouseLeave={()=>sHR(null)} style={{color:"#c45e10"}}>Other Costs</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} className={(hovOn&&hovR==="oct"?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR("oct");hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{color:"#c45e10"}}>{fm(lk?gv(LO,m,"Sales"):(sumM[m]?.ot||0))}</div>})}</div>
-{pSR.map(row=><div className="sr sr-e" key={row.k}><div className={"slbl"+(hovOn&&hovR===row.g?" rh":"")} onMouseEnter={()=>sHR(row.g)} onMouseLeave={()=>sHR(null)}>{row.n}</div>{vis.map(m=><div key={m} className={(hovOn&&hovR===row.g?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR(row.g);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}}><EC value={gv(row.k,m,"Sales")} onChange={v=>uC(row.k,m,"Sales",v)} cls="cl ce"/></div>)}</div>)}
+{pSR.map(row=><div className="sr sr-e" key={row.k}><div className={"slbl"+(hovOn&&hovR===row.g?" rh":"")} onMouseEnter={()=>sHR(row.g)} onMouseLeave={()=>sHR(null)}>{row.n}</div>{vis.map(m=><div key={m} className={(hovOn&&hovR===row.g?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR(row.g);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}}><EC value={gv(row.k,m,"Sales")} onChange={v=>uC(row.k,m,"Sales",v)} cls="cl ce" tentative={isTent(row.k,m,"Sales")} onContext={()=>togTent(row.k,m,"Sales")}/></div>)}</div>)}
 <div className="sr-t"><div className={"slbl"+(hovOn&&hovR==="pnl"?" rh":"")} onMouseEnter={()=>sHR("pnl")} onMouseLeave={()=>sHR(null)} style={{color:"var(--ac)"}}>PMC & PF Profit (Loss)</div>{vis.map(m=>{const lk=isLk(m);const s=lk?gv(LS,m,"Sales"):(sumM[m]?.s||0);const c2=(lk?gv(LE,m,"Sales"):(sumM[m]?.e||0))+(lk?gv(LP,m,"Sales"):(sumM[m]?.p||0))+(lk?gv(LO,m,"Sales"):(sumM[m]?.ot||0))+pSR.filter(r=>!r.nc).reduce((a,r)=>a+gv(r.k,m,"Sales"),0);const pl=s-c2;return<div key={m} className={(hovOn&&hovR==="pnl"?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR("pnl");hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{color:pl<0?"var(--rd)":"var(--gn)"}}>{pl?fm(pl):""}</div>})}</div>
 </div></div>}
 
@@ -437,7 +440,7 @@ return<div className={"rw r"+(ri+1)} key={rk}><div className="rl">{RN[ri]}</div>
 <div className="sr sr-c"><div className={"slbl"+(hovOn&&hovR==="ext"?" rh":"")} onMouseEnter={()=>sHR("ext")} onMouseLeave={()=>sHR(null)} style={{color:"#c45e10"}}>External Materials</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} className={(hovOn&&hovR==="ext"?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR("ext");hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{color:"#c45e10"}}>{lk?fm(sumM[m]?.e||0):""}</div>})}</div>
 <div className="sr sr-c"><div className={"slbl"+(hovOn&&hovR==="pfab"?" rh":"")} onMouseEnter={()=>sHR("pfab")} onMouseLeave={()=>sHR(null)} style={{color:"#c45e10"}}>ProFab Materials</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} className={(hovOn&&hovR==="pfab"?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR("pfab");hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{color:"#c45e10"}}>{lk?fm(sumM[m]?.p||0):""}</div>})}</div>
 <div className="sr sr-c"><div className={"slbl"+(hovOn&&hovR==="oct"?" rh":"")} onMouseEnter={()=>sHR("oct")} onMouseLeave={()=>sHR(null)} style={{color:"#c45e10"}}>Other Costs</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} className={(hovOn&&hovR==="oct"?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR("oct");hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{color:"#c45e10"}}>{lk?fm(sumM[m]?.ot||0):""}</div>})}</div>
-{aSR.map(row=><div className="sr sr-e" key={row.k}><div className={"slbl"+(hovOn&&hovR===row.g?" rh":"")} onMouseEnter={()=>sHR(row.g)} onMouseLeave={()=>sHR(null)}>{row.n}</div>{vis.map(m=><div key={m} className={(hovOn&&hovR===row.g?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR(row.g);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}}><EC value={gv(row.k,m,"Sales")} onChange={v=>uC(row.k,m,"Sales",v)} cls="cl ce"/></div>)}</div>)}
+{aSR.map(row=><div className="sr sr-e" key={row.k}><div className={"slbl"+(hovOn&&hovR===row.g?" rh":"")} onMouseEnter={()=>sHR(row.g)} onMouseLeave={()=>sHR(null)}>{row.n}</div>{vis.map(m=><div key={m} className={(hovOn&&hovR===row.g?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR(row.g);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}}><EC value={gv(row.k,m,"Sales")} onChange={v=>uC(row.k,m,"Sales",v)} cls="cl ce" tentative={isTent(row.k,m,"Sales")} onContext={()=>togTent(row.k,m,"Sales")}/></div>)}</div>)}
 <div className="sr-t"><div className={"slbl"+(hovOn&&hovR==="pnl"?" rh":"")} onMouseEnter={()=>sHR("pnl")} onMouseLeave={()=>sHR(null)} style={{color:"var(--gn)"}}>PMC & PF Profit (Loss)</div>{vis.map(m=>{const lk=isLk(m);if(!lk)return<div key={m} className={(hovOn&&hovR==="pnl"?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR("pnl");hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}}/>;const s=sumM[m]?.s||0;const c2=(sumM[m]?.e||0)+(sumM[m]?.p||0)+(sumM[m]?.ot||0)+aSR.filter(r=>!r.nc).reduce((a,r)=>a+gv(r.k,m,"Sales"),0);const pl=s-c2;return<div key={m} className={(hovOn&&hovR==="pnl"?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR("pnl");hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{color:pl<0?"var(--rd)":"var(--gn)"}}>{pl?fm(pl):""}</div>})}</div>
 </div></div>}
 
