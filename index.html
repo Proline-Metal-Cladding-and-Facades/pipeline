@@ -236,6 +236,8 @@ input[type=number]{-moz-appearance:textfield}
 .notes-box textarea{width:100%;height:120px;border:1px solid var(--bd);border-radius:4px;padding:8px;font-family:var(--ft);font-size:11px;outline:none;resize:vertical;color:var(--tx)}
 .notes-box textarea:focus{border-color:var(--ac)}
 .notes-box .nbtn{display:flex;gap:6px;margin-top:8px;justify-content:flex-end}
+
+.pr-pf>div{background:#fff!important;border-top:1px solid #e8eaef;border-bottom:1px solid #e8eaef}
 /* Cell selection + status bar */
 .cl.sel{outline:1px solid var(--ac);background:rgba(91,141,239,.12)!important}
 .stat-bar{position:fixed;bottom:0;left:0;right:0;background:var(--s2);border-top:1px solid var(--bd);padding:3px 12px;display:flex;gap:16px;align-items:center;justify-content:flex-end;font-size:9px;color:var(--t2);font-family:var(--mn);z-index:40;height:22px}
@@ -512,7 +514,7 @@ return<div className={"rw r"+(ri+1)} key={rk}><div className="rl">{RN[ri]}</div>
 {/* PFAB Cards */}
 <div className="cds"><div className="cd">
 <div className="cl2">Total Revenue</div>
-<div className="cv">{fK((()=>{const ms=selM.length?selM:MO;let t=0;comp.forEach(p=>{const pfCon=gv(p.nm,"_BC","ProfabMaterials");const pfVar=gv(p.nm,"_BV","ProfabMaterials");const pfVO=voPfab[nk(p.nm)]||0;t+=pfCon+pfVar+pfVO});return t})())}</div>
+<div className="cv">{fK((()=>{if(selM.length>0){let t=0;selM.forEach(m=>{comp.forEach(p=>{t+=gv(p.nm,m,"ProfabMaterials")})});return t}let t=0;comp.forEach(p=>{t+=gv(p.nm,"_BC","ProfabMaterials")+gv(p.nm,"_BV","ProfabMaterials")+(voPfab[nk(p.nm)]||0)});return t})())}</div>
 <div className="cl3">{selM.length?selM.join(", "):"All projects"}</div>
 </div></div>
 {/* Toolbar */}
@@ -528,8 +530,8 @@ return<div className={"rw r"+(ri+1)} key={rk}><div className="rl">{RN[ri]}</div>
 {vis.map(m=><div key={m} className={(selM.includes(m)?"ms":"")+" "+(m===CUR_M?"cur-month":"")} onClick={()=>togM(m)} style={{textAlign:"center",color:"var(--tx)"}}>{m}</div>)}</div>
 {(()=>{let pfs=comp.filter(p=>{const pfCon=gv(p.nm,"_BC","ProfabMaterials");const pfVar=gv(p.nm,"_BV","ProfabMaterials");const pfVO=voPfab[nk(p.nm)]||0;return(pfCon+pfVar+pfVO+p.pT)>0});if(pfStFilt.length>0)pfs=pfs.filter(p=>pfStFilt.includes(p.st));if(pfSr)pfs=pfs.filter(p=>p.nm.toLowerCase().includes(pfSr.toLowerCase()));return pfs.map(p=>{
 const pfCon=gv(p.nm,"_BC","ProfabMaterials");const pfVar=gv(p.nm,"_BV","ProfabMaterials");const pfVO=voPfab[nk(p.nm)]||0;const pfTot=pfCon+pfVar+pfVO;const pfAlloc=p.pT;const pfTba=pfTot-pfAlloc;
-return<div className="pr" key={p.i}>
-<div style={{textAlign:"left",position:"sticky",left:0,zIndex:3,background:"var(--s3)",fontFamily:"var(--ft)",color:"var(--ac)",fontSize:10,fontWeight:700,padding:"4px 6px",display:"flex",alignItems:"center",gap:4}}><span className={"st-tag "+(p.st==="Live"?"st-live":p.st==="Pending"?"st-pend":p.st==="Awarded"?"st-awd":"st-done")} style={{fontSize:7}}>{p.st==="Live"?"LIVE":p.st==="Pending"?"PEND":p.st==="Awarded"?"AWRD":"DONE"}</span>{p.nm}</div>
+return<div className="pr pr-pf" key={p.i}>
+<div style={{textAlign:"left",position:"sticky",left:0,zIndex:3,background:"#fff",fontFamily:"var(--ft)",color:"var(--ac)",fontSize:10,fontWeight:700,padding:"4px 6px",display:"flex",alignItems:"center",gap:4}}><span className={"st-tag "+(p.st==="Live"?"st-live":p.st==="Pending"?"st-pend":p.st==="Awarded"?"st-awd":"st-done")} style={{fontSize:7}}>{p.st==="Live"?"LIVE":p.st==="Pending"?"PEND":p.st==="Awarded"?"AWRD":"DONE"}</span>{p.nm}</div>
 <div style={{fontFamily:"var(--mn)",fontSize:10,textAlign:"right",padding:"4px 6px"}}>{pfCon?fm(pfCon):""}</div>
 <div style={{fontFamily:"var(--mn)",fontSize:10,textAlign:"right",padding:"4px 6px"}}>{pfVar?fm(pfVar):""}</div>
 <div style={{fontFamily:"var(--mn)",fontSize:10,color:"var(--pu)",fontStyle:"italic",textAlign:"right",padding:"4px 6px"}}>{pfVO?fm(pfVO):"-"}</div>
@@ -542,19 +544,19 @@ return<div className="pr" key={p.i}>
 {/* No. of Weeks */}
 <div style={{marginTop:6,border:"1px solid var(--am)",borderRadius:4}} className="ss" onScroll={syncScroll}><div className="g" style={{gridTemplateColumns:"160px 80px 72px 80px 80px 72px 72px "+vis.map(()=>"72px").join(" "),background:"var(--s2)"}}>
 <div style={{gridColumn:"1/8",padding:"4px 8px",fontWeight:800,fontSize:10,color:"var(--tx)",textTransform:"uppercase",position:"sticky",left:0,background:"var(--s2)"}}>No. of Weeks</div>
-{vis.map(m=><div key={m} style={{padding:"4px 6px",textAlign:"center",fontFamily:"var(--mn)",fontSize:10,fontWeight:700,color:"var(--tx)",...(m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.1)"}:{})}}>{countWed(m)}</div>)}
+{vis.map(m=>{const wkVal=gv(WK,m,"Sales")||countWed(m);return<div key={m} style={{padding:"4px 6px",textAlign:"center",fontFamily:"var(--mn)",fontSize:10,fontWeight:700,color:"var(--tx)",...(m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.1)"}:{})}}>{wkVal}</div>})}
 </div></div>
 {/* PFAB Projected */}
-<div className="sum-hdr sum-hdr-p" onClick={()=>sPjO(!pjO)}>{pjO?"\u25be":"\u25b8"} <b>PROJECTED</b> <span className="tog">{pjO?"collapse":"expand"}</span></div>
+<div className="sum-hdr sum-hdr-p" onClick={()=>sPjO(!pjO)}>{pjO?"▾":"▸"} <b>PROJECTED</b> <span className="tog">{pjO?"collapse":"expand"}</span></div>
 {pjO&&<div className="sum-body ss" onScroll={syncScroll}><div className="g" style={{gridTemplateColumns:"160px 80px 72px 80px 80px 72px 72px "+vis.map(()=>"72px").join(" ")}}>
 <div className="sr"><div className="slbl" style={{fontWeight:700,fontSize:8}}></div>{vis.map(m=><div key={m} style={{fontWeight:700,fontSize:8,color:"var(--tx)",textAlign:"center",padding:"4px 2px",background:"var(--s2)",borderBottom:"2px solid var(--bd)"}}>{m}</div>)}</div>
-<div className="sr"><div className="slbl" style={{color:"var(--am)",fontSize:8}}>\ud83d\udd12 Lock Month</div>{vis.map(m=><div key={m} style={{textAlign:"center",padding:"2px 0"}}><button className={"lk"+(isLk(m)?" on":"")} onClick={()=>doLock(m)} title={m} style={{width:"100%"}}>{isLk(m)?"\ud83d\udd12":"\ud83d\udd13"}</button></div>)}</div>
+<div className="sr"><div className="slbl" style={{color:"var(--am)",fontSize:8}}>🔒 Lock Month</div>{vis.map(m=><div key={m} style={{textAlign:"center",padding:"2px 0"}}><button className={"lk"+(isLk(m)?" on":"")} onClick={()=>doLock(m)} title={m} style={{width:"100%"}}>{isLk(m)?"🔒":"🔓"}</button></div>)}</div>
 <div className="sr sr-c"><div className="slbl" style={{fontWeight:700}}>Projects</div>{vis.map(m=>{const lk=isLk(m);const val=lk?gv(LP,m,"Sales"):(sumM[m]?.p||0);return<div key={m} style={{fontWeight:600,color:"var(--ac)"}}>{val?fm(val):""}</div>})}</div>
 {pfPSR.map(row=><div className="sr sr-e" key={row.k}><div className="slbl" style={row.cl?{color:row.cl}:{}}>{row.n}</div>{vis.map(m=><div key={m}><EC value={gv(row.k,m,"Sales")} onChange={v=>uC(row.k,m,"Sales",v)} cls="cl ce"/></div>)}</div>)}
 <div className="sr-t"><div className="slbl" style={{color:"var(--ac)"}}>PFAB Profit (Loss)</div>{vis.map(m=>{const lk=isLk(m);const sales=lk?gv(LP,m,"Sales"):(sumM[m]?.p||0);const costs=pfPSR.filter(r=>!r.nc).reduce((a,r)=>a+gv(r.k,m,"Sales"),0);const pl=sales-costs;return<div key={m} style={{color:pl<0?"var(--rd)":pl>0?"var(--gn)":"var(--tx)",fontWeight:800}}>{pl?fm(pl):""}</div>})}</div>
 </div></div>}
 {/* PFAB Actual */}
-<div className="sum-hdr sum-hdr-a" onClick={()=>sAcO(!acO)}>{acO?"\u25be":"\u25b8"} <b>ACTUAL</b> <span className="tog">{acO?"collapse":"expand"}</span></div>
+<div className="sum-hdr sum-hdr-a" onClick={()=>sAcO(!acO)}>{acO?"▾":"▸"} <b>ACTUAL</b> <span className="tog">{acO?"collapse":"expand"}</span></div>
 {acO&&<div className="sum-body ss" onScroll={syncScroll}><div className="g" style={{gridTemplateColumns:"160px 80px 72px 80px 80px 72px 72px "+vis.map(()=>"72px").join(" ")}}>
 <div className="sr"><div className="slbl" style={{fontWeight:700,fontSize:8}}></div>{vis.map(m=><div key={m} style={{fontWeight:700,fontSize:8,color:"var(--tx)",textAlign:"center",padding:"4px 2px",background:"var(--s2)",borderBottom:"2px solid var(--bd)"}}>{m}</div>)}</div>
 <div className="sr sr-c"><div className="slbl" style={{fontWeight:700}}>Actual PFAB Sales</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} style={{fontWeight:600,color:"var(--ac)"}}>{lk?fm(sumM[m]?.p||0):""}</div>})}</div>
