@@ -209,6 +209,9 @@
 .sr>div{border-right:1px solid #e8eaef}
 .sr-t>div{border-right:1px solid #e8eaef}
 .sr-w>div{border-right:1px solid #e8eaef}
+
+.cl.tent{color:var(--rd)!important;font-style:italic;position:relative}
+.cl.tent::after{content:"*";position:absolute;top:-2px;right:-1px;font-size:6px;color:var(--rd)}
 /* Cell selection + status bar */
 .cl.sel{outline:1px solid var(--ac);background:rgba(91,141,239,.12)!important}
 .stat-bar{position:fixed;bottom:0;left:0;right:0;background:var(--s2);border-top:1px solid var(--bd);padding:3px 12px;display:flex;gap:16px;align-items:center;justify-content:flex-end;font-size:9px;color:var(--t2);font-family:var(--mn);z-index:40;height:22px}
@@ -238,11 +241,11 @@ function pM(v){var s=String(v||"").trim();if(/^[A-Za-z]{3}-\d{2}$/.test(s))retur
 function countWed(m){try{const ms={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};const p=m.split("-");const y=2000+parseInt(p[1]);const days=new Date(y,ms[p[0]]+1,0).getDate();let c=0;for(let d=1;d<=days;d++){if(new Date(y,ms[p[0]],d).getDay()===3)c++}return c}catch{return 4}}
 
 function nk(s){return String(s||"").toLowerCase().replace(/[^a-z0-9]/g,"")}
-function EC({value,onChange,cls}){const[e,sE]=useState(false);const[d,sD]=useState("");const r=useRef();
+function EC({value,onChange,cls,tentative,onContext}){const[e,sE]=useState(false);const[d,sD]=useState("");const r=useRef();
 useEffect(()=>{if(e&&r.current)r.current.focus()},[e]);
 const c=()=>{sE(false);const n=parseFloat(d.replace(/,/g,""))||0;if(n!==(value||0))onChange(n)};
 if(e)return<input ref={r} className="ci" value={d} onChange={x=>sD(x.target.value)} onBlur={c} onKeyDown={x=>{if(x.key==="Enter")c();if(x.key==="Escape")sE(false)}}/>;
-return<div className={(cls||"cl cs")} onDoubleClick={()=>{sD(value?String(value):"");sE(true)}}>{value?fm(value):""}</div>}
+return<div className={(cls||"cl cs")+(tentative?" tent":"")} onContextMenu={e=>{e.preventDefault();if(onContext)onContext()}} onDoubleClick={()=>{sD(value?String(value):"");sE(true)}}>{value?fm(value):""}</div>}
 
 function EN({value,onSave,style}){const[e,sE]=useState(false);const[d,sD]=useState("");const r=useRef();
 useEffect(()=>{if(e&&r.current){r.current.focus();r.current.select()}},[e]);
@@ -260,7 +263,10 @@ const[pj,sPj]=useState([]);const[mo,sMo]=useState({});const[vo,sVo]=useState([])
 const[vw,sVw]=useState("grid");const[sbOpen,sSbO]=useState(false);const[stFilt,setStFilt]=useState([]);const[sr,sSr]=useState("");const[sc,sSc]=useState(12);
 const[sa,sSa]=useState(false);const[nn,sNn]=useState("");const[nc,sNc]=useState("");
 const[er,sEr]=useState(null);const[sav,sSav]=useState(false);
-const[selM,sSM]=useState([]);const[startM,setStartM]=useState(0);const[exp,sExp]=useState({});const[hovR,sHR]=useState(null);const[hovC,sHC]=useState(null);const[hovOn,setHovOn]=useState(true);const[selCells,setSelCells]=useState([]);
+const[selM,sSM]=useState([]);const[startM,setStartM]=useState(0);const[exp,sExp]=useState({});
+const[tent,setTent]=useState(()=>{try{return JSON.parse(localStorage.getItem("pipeline-tent")||"{}")}catch{return{}}});
+const togTent=(p,m,col)=>{const k=nk(p)+"|||"+m+"|||"+col;setTent(prev=>{const n={...prev};if(n[k])delete n[k];else n[k]=true;localStorage.setItem("pipeline-tent",JSON.stringify(n));return n})};
+const isTent=(p,m,col)=>tent[nk(p)+"|||"+m+"|||"+col]||false;const[hovR,sHR]=useState(null);const[hovC,sHC]=useState(null);const[hovOn,setHovOn]=useState(true);const[selCells,setSelCells]=useState([]);
 
 const handleCellClick=(val,e)=>{if(!val&&val!==0)return;const v=Number(val);if(isNaN(v))return;if(e.ctrlKey||e.metaKey){setSelCells(prev=>[...prev,v])}else{setSelCells([v])}};
 const clearSel=()=>setSelCells([]);
@@ -298,7 +304,7 @@ const uP=useCallback(async(nm,fd,val)=>{const fl=fd.toLowerCase();sPj(pr=>pr.map
 const renP=useCallback(async(old,nw)=>{sPj(pr=>pr.map(p=>p.nm===old?{...p,nm:nw}:p));sMo(prev=>{const next={};Object.entries(prev).forEach(([k,v])=>{next[k.startsWith(nk(old)+"|||")?nk(nw)+"|||"+k.split("|||")[1]:k]=v});return next});sSv(true);await aP({action:"updateProject",name:old,field:"Project",value:nw});sLs(new Date());sSv(false)},[]);
 const uV=useCallback(async(vi,fd,val)=>{const v=vo[vi];if(!v)return;sVo(pr=>pr.map((x,i)=>i===vi?{...x,[fd]:val}:x));const m2={"pj":"PROJECT","ty":"TYPE","vn":"VARIATION NO.","vnm":"VARIATION NAME","ds":"DATE SUBMITTED","da":"DATE APPROVED","pr":"PRICE","st":"STATUS","em":"EXTERNAL MATERIALS","pf":"PFAB MATERIALS","nmn":"NO. OF MEN","nh":"NORMAL HOURS","nr":"NORMAL RATE","oh":"OVERTIME HOURS","or2":"OVERTIME RATE"};sSv(true);await aP({action:"updateVO",row:v._r,field:m2[fd]||fd,value:val});sLs(new Date());sSv(false)},[vo]);
 const addV=async()=>{if(!nvo.project)return;sSv(true);await aP({action:"addVO",project:nvo.project,type:nvo.type,varNo:(nvo.type==="DL"?"DL-":"VO-")+nvo.varNo,varName:nvo.varName,dateSubmitted:nvo.ds,dateApproved:nvo.da,price:nvo.price,status:nvo.status,extMaterials:nvo.em,pfabMaterials:nvo.pf,margin:nvo.price-nvo.em-nvo.pf});sSav(false);sNvo({project:"",type:"VO",varNo:"",varName:"",ds:"",da:"",price:0,status:"",em:0,pf:0});sSv(false);sLs(new Date());setTimeout(load,1500)};
-const aPj=async()=>{if(!nn.trim())return;const c=parseFloat(nc.replace(/,/g,""))||0;sSv(true);await aP({action:"addProject",name:nn.trim(),contractPrice:c,variations:0});sPj(p=>[...p,{nm:nn.trim(),jid:"",cp:c,v:0,st:"Live"}]);sNn("");sNc("");sSa(false);sSv(false);sLs(new Date())};
+const aPj=async()=>{if(!nn.trim())return;if(pj.some(p=>nk(p.nm)===nk(nn.trim()))){alert("Project \""+nn.trim()+"\" already exists.");return}const c=parseFloat(nc.replace(/,/g,""))||0;sSv(true);await aP({action:"addProject",name:nn.trim(),contractPrice:c,variations:0});sPj(p=>[...p,{nm:nn.trim(),jid:"",cp:c,v:0,st:"Live"}]);sNn("");sNc("");sSa(false);sSv(false);sLs(new Date())};
 const dPj=async nm=>{if(!confirm('Delete "'+nm+'"?'))return;sSv(true);await aP({action:"deleteProject",name:nm});sPj(p=>p.filter(x=>x.nm!==nm));sMo(p=>{const x={...p};Object.keys(x).forEach(k=>{if(k.startsWith(nk(nm)+"|||"))delete x[k]});return x});sSv(false);sLs(new Date())};
 
 const isLk=m=>gv(LK,m,"Sales")===1;
@@ -356,8 +362,8 @@ return<div className="app" onClick={e=>{const el=e.target.closest('.cl');if(el){
 <div className="mn2"><select value={startM} onChange={e=>setStartM(Number(e.target.value))} style={{background:"var(--s2)",border:"1px solid var(--bd)",color:"var(--tx)",padding:"2px 4px",borderRadius:3,fontSize:8,fontFamily:"var(--ft)"}}>{MO.map((m,i)=><option key={m} value={i}>{m}</option>)}</select><button onClick={()=>{const ci=MO.indexOf(CUR_M);if(ci>=0)setStartM(ci)}} style={{color:"var(--ac)"}}>Today</button><div className="dv"/><button onClick={()=>sExp(comp.reduce((a,p)=>({...a,[p.nm]:true}),{}))} title="Expand All">+ All</button><button onClick={()=>sExp({})} title="Collapse All">- All</button><div className="dv"/><button onClick={()=>{document.querySelectorAll(".ss").forEach(el=>{el.scrollLeft=Math.max(0,el.scrollLeft-300)})}}>←</button><span>{vis[0]} — {vis[vis.length-1]} ({vis.length} months)</span><button onClick={()=>{document.querySelectorAll(".ss").forEach(el=>{el.scrollLeft+=300})}}>→</button><div style={{flex:1}}/><button onClick={addMonth} style={{color:"var(--gn)",borderColor:"var(--gn)"}}>+ Month</button>{selM.length>0&&<button onClick={()=>sSM([])} style={{color:"var(--pu)"}}>Clear</button>}</div>
 
 {/* ====== MAIN TABLE ====== */}
-<div className="gc ss" onScroll={syncScroll} style={{maxHeight:"55vh",overflowY:"auto"}}><div className="g" style={{gridTemplateColumns:gC}}>
-<div className="gh"><div>Project</div><div style={{color:"var(--am)"}}>Contract</div><div style={{color:"var(--am)"}}>Var.</div><div style={{color:"var(--pu)"}}>Appr.VOs</div><div>Total</div><div>Claimed</div><div>To Alloc.</div>
+<div className="gc ss" onScroll={syncScroll} style={{maxHeight:"calc(100vh - 280px)",overflowY:"auto"}}><div className="g" style={{gridTemplateColumns:gC}}>
+<div className="gh"><div>Project</div><div style={{color:"var(--am)"}}>Contract</div><div style={{color:"var(--am)"}}>Var.</div><div style={{color:"var(--pu)"}}>Appr.VOs</div><div>Total</div><div>Alloc.</div><div>To Alloc.</div>
 {vis.map(m=><div key={m} className={(selM.includes(m)?"ms":"")+" "+(hovOn&&hovC===m?"ch":"")+" "+(m===CUR_M?"cur-month":"")} onClick={()=>togM(m)} onMouseEnter={()=>hovOn&&sHC(m)} onMouseLeave={()=>sHC(null)}>{m}</div>)}</div>
 
 {flt.map(p=>{
@@ -376,7 +382,7 @@ return<div className="pg" key={p.i}>
 <div className={hovOn&&hovR===p.nm?"rh":""} style={{fontWeight:800}}>{fm(p.tot)}</div>
 <div className={hovOn&&hovR===p.nm?"rh":""}>{fm(p.sT)}</div>
 <div className={hovOn&&hovR===p.nm?"rh":""} style={{color:p.tba<0?"var(--rd)":p.tba>0?"var(--am)":"var(--gn)"}}>{fm(p.tba)}</div>
-{vis.map(m=><div key={m} className={(hovOn&&hovR===p.nm?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{hovOn&&sHR(p.nm);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.06)"}:{}}><EC value={gv(p.nm,m,"Sales")} onChange={val=>uC(p.nm,m,"Sales",val)} cls="cl cs"/></div>)}
+{vis.map(m=><div key={m} className={(hovOn&&hovR===p.nm?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{hovOn&&sHR(p.nm);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.06)"}:{}}><EC value={gv(p.nm,m,"Sales")} onChange={val=>uC(p.nm,m,"Sales",val)} cls="cl cs" tentative={isTent(p.nm,m,"Sales")} onContext={()=>togTent(p.nm,m,"Sales")}/></div>)}
 </div>
 {/* Collapsible sub-rows */}
 {open&&<>{RK.map((rk,ri)=>{
@@ -392,7 +398,7 @@ return<div className={"rw r"+(ri+1)} key={rk}><div className="rl">{RN[ri]}</div>
 <div style={{fontFamily:"var(--mn)",color:"#c45e10"}}>{(cTot||cClaimed)?fm(cTot):""}</div>
 <div style={{fontFamily:"var(--mn)",color:"#c45e10"}}>{fm(cClaimed)}</div>
 <div style={{fontFamily:"var(--mn)",color:cTba<0?"var(--rd)":cTba>0?"var(--am)":"var(--gn)"}}>{(cTot||cClaimed)?fm(cTba):""}</div>
-{vis.map(m=><div key={m} className={(hovOn&&hovR===p.nm?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{hovOn&&sHR(p.nm);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.06)"}:{}}><EC value={gv(p.nm,m,rk)} onChange={val=>uC(p.nm,m,rk,val)} cls="cl cc"/></div>)}</div>})}
+{vis.map(m=><div key={m} className={(hovOn&&hovR===p.nm?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{hovOn&&sHR(p.nm);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.06)"}:{}}><EC value={gv(p.nm,m,rk)} onChange={val=>uC(p.nm,m,rk,val)} cls="cl cc" tentative={isTent(p.nm,m,rk)} onContext={()=>togTent(p.nm,m,rk)}/></div>)}</div>})}
 <div className="rg"><div className="rl">Gross Profit</div><div/><div/><div/>
 <div style={{fontFamily:"var(--mn)",color:p.gp<0?"var(--rd)":"var(--gn)"}}>{fm(p.gp)}</div><div/><div/>
 {vis.map(m=>{const v=gpM(m);return<div key={m} className={(hovOn&&hovR===p.nm?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{hovOn&&sHR(p.nm);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{...(m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.06)"}:{}),fontFamily:"var(--mn)",fontSize:10,color:v<0?"var(--rd)":"var(--gn)",fontWeight:600}}>{v?fm(v):""}</div>})}</div>
