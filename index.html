@@ -289,9 +289,9 @@ const load=useCallback(async()=>{
 
 useEffect(()=>{if(un)load()},[un,load]);
 const gv=(p,m,c)=>mo[nk(p)+"|||"+m]?.[c]||0;
-const voP=useMemo(()=>{const m={};vo.forEach(v=>{if(isAp(v.st))m[v.pj]=(m[v.pj]||0)+v.pr});return m},[vo]);
-const voExt=useMemo(()=>{const m={};vo.forEach(v=>{if(isAp(v.st))m[v.pj]=(m[v.pj]||0)+v.em});return m},[vo]);
-const voPfab=useMemo(()=>{const m={};vo.forEach(v=>{if(isAp(v.st))m[v.pj]=(m[v.pj]||0)+v.pf});return m},[vo]);
+const voP=useMemo(()=>{const m={};vo.forEach(v=>{if(isAp(v.st))m[nk(v.pj)]=(m[nk(v.pj)]||0)+v.pr});return m},[vo]);
+const voExt=useMemo(()=>{const m={};vo.forEach(v=>{if(isAp(v.st))m[nk(v.pj)]=(m[nk(v.pj)]||0)+v.em});return m},[vo]);
+const voPfab=useMemo(()=>{const m={};vo.forEach(v=>{if(isAp(v.st))m[nk(v.pj)]=(m[nk(v.pj)]||0)+v.pf});return m},[vo]);
 
 const uC=useCallback(async(p,m,c,val)=>{sMo(pr=>({...pr,[nk(p)+"|||"+m]:{...(pr[nk(p)+"|||"+m]||{}),[c]:val}}));sSv(true);await aP({action:"updateCell",project:p,month:m,column:c,value:val,editedBy:un,editedAt:new Date().toLocaleString("en-AU")});sLs(new Date());sSv(false)},[un]);
 const uP=useCallback(async(nm,fd,val)=>{const fl=fd.toLowerCase();sPj(pr=>pr.map(p=>p.nm===nm?{...p,[fl.includes("contract")?"cp":fl.includes("job")?"jid":fl.includes("status")?"st":"v"]:val}:p));sSv(true);await aP({action:"updateProject",name:nm,field:fd,value:val});sLs(new Date());sSv(false)},[]);
@@ -304,7 +304,7 @@ const dPj=async nm=>{if(!confirm('Delete "'+nm+'"?'))return;sSv(true);await aP({
 const isLk=m=>gv(LK,m,"Sales")===1;
 const doLock=async m=>{if(!isLk(m)){const s=comp.reduce((a,p)=>a+gv(p.nm,m,"Sales"),0);const e=comp.reduce((a,p)=>a+gv(p.nm,m,"ExtMaterials"),0);const p2=comp.reduce((a,p)=>a+gv(p.nm,m,"ProfabMaterials"),0);const o=comp.reduce((a,p)=>a+gv(p.nm,m,"OtherCosts"),0);await uC(LK,m,"Sales",1);await uC(LS,m,"Sales",s);await uC(LE,m,"Sales",e);await uC(LP,m,"Sales",p2);await uC(LO,m,"Sales",o)}else{await uC(LK,m,"Sales",0)}};
 
-const comp=useMemo(()=>pj.filter(p=>!p.nm.startsWith("_")).map((p,i)=>{let sT=0,eT=0,pT=0,oT=0;MO.forEach(m=>{sT+=gv(p.nm,m,"Sales");eT+=gv(p.nm,m,"ExtMaterials");pT+=gv(p.nm,m,"ProfabMaterials");oT+=gv(p.nm,m,"OtherCosts")});const avo=voP[p.nm]||0,tot=p.cp+p.v+avo,gp=tot-eT-pT-oT;return{...p,i,sT,eT,pT,oT,avo,tot,gp,tba:tot-sT}}),[pj,mo,voP]);
+const comp=useMemo(()=>pj.filter(p=>!p.nm.startsWith("_")).map((p,i)=>{let sT=0,eT=0,pT=0,oT=0;MO.forEach(m=>{sT+=gv(p.nm,m,"Sales");eT+=gv(p.nm,m,"ExtMaterials");pT+=gv(p.nm,m,"ProfabMaterials");oT+=gv(p.nm,m,"OtherCosts")});const avo=voP[nk(p.nm)]||0,tot=p.cp+p.v+avo,gp=tot-eT-pT-oT;return{...p,i,sT,eT,pT,oT,avo,tot,gp,tba:tot-sT}}),[pj,mo,voP]);
 const flt=useMemo(()=>{let f=comp;if(stFilt!=="all")f=f.filter(p=>p.st===stFilt);if(sr){const q=sr.toLowerCase();f=f.filter(p=>p.nm.toLowerCase().includes(q))}return f},[comp,sr,stFilt]);
 const vis=MO;
 const sumM=useMemo(()=>{const o={};MO.forEach(m=>{let s=0,e=0,p=0,ot=0;comp.forEach(pr=>{s+=gv(pr.nm,m,"Sales");e+=gv(pr.nm,m,"ExtMaterials");p+=gv(pr.nm,m,"ProfabMaterials");ot+=gv(pr.nm,m,"OtherCosts")});o[m]={s,e,p,ot}});return o},[comp,mo]);
@@ -381,7 +381,7 @@ return<div className="pg" key={p.i}>
 {/* Collapsible sub-rows */}
 {open&&<>{RK.map((rk,ri)=>{
 const bCon=gv(p.nm,"_BC",rk);const bVar=gv(p.nm,"_BV",rk);
-const avoC=ri===0?(voExt[p.nm]||0):ri===1?(voPfab[p.nm]||0):0;
+const avoC=ri===0?(voExt[nk(p.nm)]||0):ri===1?(voPfab[nk(p.nm)]||0):0;
 const cTot=bCon+bVar+avoC;
 const cClaimed=[p.eT,p.pT,p.oT][ri];
 const cTba=cTot-cClaimed;
@@ -392,7 +392,7 @@ return<div className={"rw r"+(ri+1)} key={rk}><div className="rl">{RN[ri]}</div>
 <div style={{fontFamily:"var(--mn)",color:"#c45e10"}}>{cTot?fm(cTot):""}</div>
 <div style={{fontFamily:"var(--mn)",color:"#c45e10"}}>{fm(cClaimed)}</div>
 <div style={{fontFamily:"var(--mn)",color:cTba<0?"var(--rd)":cTba>0?"var(--am)":"var(--gn)"}}>{cTot?fm(cTba):""}</div>
-{vis.map(m=><div key={m} className={(hovOn&&hovR===p.nm?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{hovOn&&sHR(p.nm);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.06)"}:{}}><EC value={gv(p.nm,m,rk)} onChange={val=>uC(p.nm,m,rk,val)} cls="cl cc"/></div>)}</div>)}
+{vis.map(m=><div key={m} className={(hovOn&&hovR===p.nm?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{hovOn&&sHR(p.nm);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.06)"}:{}}><EC value={gv(p.nm,m,rk)} onChange={val=>uC(p.nm,m,rk,val)} cls="cl cc"/></div>)}</div>})}
 <div className="rg"><div className="rl">Gross Profit</div><div/><div/><div/>
 <div style={{fontFamily:"var(--mn)",color:p.gp<0?"var(--rd)":"var(--gn)"}}>{fm(p.gp)}</div><div/><div/>
 {vis.map(m=>{const v=gpM(m);return<div key={m} className={(hovOn&&hovR===p.nm?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{hovOn&&sHR(p.nm);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{...(m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.06)"}:{}),fontFamily:"var(--mn)",fontSize:10,color:v<0?"var(--rd)":"var(--gn)",fontWeight:600}}>{v?fm(v):""}</div>})}</div>
