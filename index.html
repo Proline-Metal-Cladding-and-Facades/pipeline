@@ -214,6 +214,10 @@
 .cl.tent::after{content:"*";position:absolute;top:-2px;right:-1px;font-size:6px;color:var(--rd)}
 
 /* Freeze panes for summary tables */
+
+.sum-body .sr:first-child>div{position:sticky;top:0;z-index:3;background:var(--s2)}
+.sum-body .sr:first-child .slbl{background:var(--s2);z-index:4}
+
 .sr>div:first-child,.sr-t>div:first-child,.sr-w>div:first-child{border-right:2px solid var(--bd)}
 /* Cell selection + status bar */
 .cl.sel{outline:1px solid var(--ac);background:rgba(91,141,239,.12)!important}
@@ -422,6 +426,7 @@ return<div className={"rw r"+(ri+1)} key={rk}><div className="rl">{RN[ri]}</div>
 
 </div>
 {pjO&&<div className="sum-body ss" onScroll={syncScroll}><div className="g" style={{gridTemplateColumns:gC}}>
+<div className="sr"><div className="slbl" style={{fontWeight:700,fontSize:8,color:"var(--t2)",textTransform:"uppercase"}}></div>{vis.map(m=><div key={m} style={{fontWeight:700,fontSize:8,color:"var(--tx)",textAlign:"center",padding:"4px 2px",background:"var(--s2)",borderBottom:"2px solid var(--bd)"}}>{m}</div>)}</div>
 <div className="sr"><div className={"slbl"+(hovR==="_lkr"?" rh":"")} onMouseEnter={()=>sHR("_lkr")} onMouseLeave={()=>sHR(null)} style={{color:"var(--am)",fontSize:8}}>🔒 Lock Month</div>{vis.map(m=><div key={m} className={(hovR==="_lkr"?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR("_lkr");hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{textAlign:"center",padding:"2px 0"}}><button className={"lk"+(isLk(m)?" on":"")} onClick={()=>doLock(m)} title={m} style={{width:"100%"}}>{isLk(m)?"🔒":"🔓"}</button></div>)}</div>
 <div className="sr sr-c"><div className={"slbl"+(hovOn&&hovR==="sal"?" rh":"")} onMouseEnter={()=>sHR("sal")} onMouseLeave={()=>sHR(null)}>Projected Sales</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} className={(hovOn&&hovR==="sal"?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR("sal");hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{fontWeight:600,color:"var(--ac)"}}>{fm(lk?gv(LS,m,"Sales"):(sumM[m]?.s||0))}</div>})}</div>
 <div className="sr sr-c"><div className={"slbl"+(hovOn&&hovR==="ext"?" rh":"")} onMouseEnter={()=>sHR("ext")} onMouseLeave={()=>sHR(null)} style={{color:"#c45e10"}}>External Materials</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} className={(hovOn&&hovR==="ext"?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR("ext");hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{color:"#c45e10"}}>{fm(lk?gv(LE,m,"Sales"):(sumM[m]?.e||0))}</div>})}</div>
@@ -436,6 +441,7 @@ return<div className={"rw r"+(ri+1)} key={rk}><div className="rl">{RN[ri]}</div>
 {acO?"▾":"▸"} ACTUAL <span className="tog">{acO?"collapse":"expand"}</span>
 </div>
 {acO&&<div className="sum-body ss" onScroll={syncScroll}><div className="g" style={{gridTemplateColumns:gC}}>
+<div className="sr"><div className="slbl" style={{fontWeight:700,fontSize:8,color:"var(--t2)",textTransform:"uppercase"}}></div>{vis.map(m=><div key={m} style={{fontWeight:700,fontSize:8,color:"var(--tx)",textAlign:"center",padding:"4px 2px",background:"var(--s2)",borderBottom:"2px solid var(--bd)"}}>{m}</div>)}</div>
 <div className="sr sr-c"><div className={"slbl"+(hovOn&&hovR==="sal"?" rh":"")} onMouseEnter={()=>sHR("sal")} onMouseLeave={()=>sHR(null)}>Actual Sales</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} className={(hovOn&&hovR==="sal"?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR("sal");hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{fontWeight:600,color:"var(--ac)"}}>{lk?fm(sumM[m]?.s||0):""}</div>})}</div>
 <div className="sr sr-c"><div className={"slbl"+(hovOn&&hovR==="ext"?" rh":"")} onMouseEnter={()=>sHR("ext")} onMouseLeave={()=>sHR(null)} style={{color:"#c45e10"}}>External Materials</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} className={(hovOn&&hovR==="ext"?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR("ext");hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{color:"#c45e10"}}>{lk?fm(sumM[m]?.e||0):""}</div>})}</div>
 <div className="sr sr-c"><div className={"slbl"+(hovOn&&hovR==="pfab"?" rh":"")} onMouseEnter={()=>sHR("pfab")} onMouseLeave={()=>sHR(null)} style={{color:"#c45e10"}}>ProFab Materials</div>{vis.map(m=>{const lk=isLk(m);return<div key={m} className={(hovOn&&hovR==="pfab"?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{sHR("pfab");hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{color:"#c45e10"}}>{lk?fm(sumM[m]?.p||0):""}</div>})}</div>
