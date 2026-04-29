@@ -56,7 +56,7 @@
 .eb{background:none;border:1px solid var(--bd);color:var(--t2);cursor:pointer;font-size:9px;border-radius:3px;padding:0 4px;font-weight:700;font-family:var(--mn);line-height:16px;flex-shrink:0}
 .eb:hover{color:var(--ac);border-color:var(--ac)}
 .xb{background:none;border:none;color:var(--t2);cursor:pointer;font-size:11px;opacity:.3;padding:0 1px;flex-shrink:0}.xb:hover{color:var(--rd);opacity:1}
-.pne{cursor:pointer;color:var(--ac);font-size:10px;font-weight:700}.pne:hover{color:var(--am)}
+.pne{cursor:pointer;color:var(--ac);font-size:10px;font-weight:700;white-space:nowrap}.pne:hover{color:var(--am)}
 .st-tag{font-size:7px;font-weight:700;padding:1px 5px;border-radius:8px;flex-shrink:0;cursor:pointer}
 .st-live{background:rgba(52,211,153,.15);color:var(--gn)}.st-done{background:rgba(125,137,166,.15);color:var(--t2)}.st-pend{background:rgba(220,74,74,.15);color:var(--rd)}.st-awd{background:rgba(68,114,196,.15);color:var(--ac)}
 .jid-tag{font-size:8px;color:var(--t2);font-family:var(--mn);flex-shrink:0;background:var(--bg);border:1px solid var(--bd);padding:0 4px;border-radius:3px;outline:none;width:50px}
@@ -385,7 +385,7 @@ const aSR=[{k:"_AS",n:"Subcontractors: Non Full-Time",g:"sub"},{k:"_AO",n:"Group
 if(!un)return<div className="np"><div className="nc"><div style={{fontSize:40}}>👤</div><h2>Welcome</h2><p>Enter your name.</p><input className="nin" placeholder="Your name..." value={ni} onChange={e=>sNi(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&ni.trim())sub(ni.trim())}} autoFocus/><button className="nbt" disabled={!ni.trim()} onClick={()=>sub(ni.trim())}>Enter →</button></div></div>;
 
 // SAME column template as the working version: 7 fixed + 12 months = 19 cols
-const gC="160px 72px 62px 65px 72px 72px 65px "+vis.map(()=>"72px").join(" ");
+const gC="200px 72px 62px 65px 72px 72px 65px "+vis.map(()=>"72px").join(" ");
 
 return<div className="app" onClick={e=>{const el=e.target.closest('.cl');if(el){const txt=el.textContent.replace(/,/g,'');const v=parseFloat(txt);if(!isNaN(v)&&v!==0){if(e.ctrlKey||e.metaKey){setSelCells(prev=>[...prev,v])}else{setSelCells([v])}}}}}>
 <div className="hd"><div className="hl"><button className="sb-toggle" onClick={()=>sSbO(true)}>☰</button><h1>{vw==="grid"?"PMC & PF Pipeline":vw==="pfab"?"PFAB Pipeline":"Variation Register"}</h1><span className="dot" style={{background:sv?"var(--am)":cached?"var(--rd)":"var(--gn)"}}/><span className="dx" style={{color:sv?"var(--am)":cached?"var(--rd)":"var(--gn)"}}>{sv?"Saving...":cached?"Offline":"Connected"}</span></div>
