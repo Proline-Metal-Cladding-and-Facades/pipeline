@@ -238,6 +238,7 @@ input[type=number]{-moz-appearance:textfield}
 .notes-box .nbtn{display:flex;gap:6px;margin-top:8px;justify-content:flex-end}
 
 .pr-pf>div{background:#fff!important;border-top:1px solid #e8eaef;border-bottom:1px solid #e8eaef}
+.pr-pf>div:nth-child(-n+7){background:#fff!important}
 
 .pr>div:nth-child(n+8){font-weight:400}
 /* Cell selection + status bar */
@@ -315,7 +316,7 @@ const handleSumHover=(e,enter)=>{
 };
 
 const[pjO,sPjO]=useState(true);const[acO,sAcO]=useState(true);
-const defCW=[130,60,70,140,90,90,85,170,80,80,80,60,60,60,60,60,50];
+const defCW=[24,130,60,70,140,90,90,85,170,80,80,80,60,60,60,60,60,50];
 const[colW,setColW]=useState(defCW);
 const resRef=useRef(null);
 const startResize=(ci,e)=>{e.preventDefault();const startX=e.clientX;const startW=colW[ci];const onMove=e2=>{const diff=e2.clientX-startX;setColW(prev=>{const n=[...prev];n[ci]=Math.max(40,startW+diff);return n})};const onUp=()=>{document.removeEventListener("mousemove",onMove);document.removeEventListener("mouseup",onUp)};document.addEventListener("mousemove",onMove);document.addEventListener("mouseup",onUp)};
@@ -544,7 +545,7 @@ return<div className="pr pr-pf" key={p.i}>
 </div>})})()}
 </div></div>
 {/* No. of Weeks */}
-<div style={{marginTop:6,border:"1px solid var(--am)",borderRadius:4}} className="ss" onScroll={syncScroll}><div className="g" style={{gridTemplateColumns:gC,background:"var(--s2)"}}>
+<div style={{marginTop:6,border:"1px solid var(--am)",borderRadius:4,overflowX:"auto"}} className="ss" onScroll={syncScroll}><div className="g" style={{gridTemplateColumns:gC,background:"var(--s2)"}}>
 <div style={{gridColumn:"1/8",padding:"4px 8px",fontWeight:800,fontSize:10,color:"var(--tx)",textTransform:"uppercase",position:"sticky",left:0,background:"var(--s2)"}}>No. of Weeks</div>
 {vis.map(m=>{const wkVal=gv(WK,m,"Sales")||countWed(m);return<div key={m} style={{padding:"4px 6px",textAlign:"center",fontFamily:"var(--mn)",fontSize:10,fontWeight:700,color:"var(--tx)",...(m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.1)"}:{})}}>{wkVal}</div>})}
 </div></div>
@@ -565,6 +566,7 @@ return<div className="pr pr-pf" key={p.i}>
 {pfASR.map(row=><div className="sr sr-e" key={row.k}><div className="slbl" style={row.cl?{color:row.cl}:{}}>{row.n}</div>{vis.map(m=><div key={m}><EC value={gv(row.k,m,"Sales")} onChange={v=>uC(row.k,m,"Sales",v)} cls="cl ce"/></div>)}</div>)}
 <div className="sr-t"><div className="slbl" style={{color:"var(--gn)"}}>PFAB Profit (Loss)</div>{vis.map(m=>{const lk=isLk(m);if(!lk)return<div key={m}/>;const sales=sumM[m]?.p||0;const costs=pfASR.filter(r=>!r.nc).reduce((a,r)=>a+gv(r.k,m,"Sales"),0);const pl=sales-costs;return<div key={m} style={{color:pl<0?"var(--rd)":"var(--gn)",fontWeight:800}}>{pl?fm(pl):""}</div>})}</div>
 </div></div>}
+<div className="scroll-ctrl ss" onScroll={syncScroll}><div style={{height:1,minWidth:568+vis.length*72}}/></div>
 </>}
 
 {/* VO REGISTER - unchanged */}
@@ -588,8 +590,8 @@ return<div className="pr pr-pf" key={p.i}>
 </div>
 {voFilt.length===0?<div className="em">No entries match filter.</div>:
 <div className="vsc"><table className="vt"><thead><tr>
-{["Project","Type","Var No.","Name","Date Sub.","Date Appr.","Price","Status","Ext.Mat","PFAB","Margin","#Men","NHrs","NRate","OTHrs","OTRate","Notes"].map((h,ci)=><th key={h} className={ci<8?"tg":ci<11?"ty":ci<16?"tp":"tg"} style={{width:colW[ci],minWidth:40,...(ci>=6&&ci!==7?{textAlign:"right"}:{})}}>{h}<div className="col-resize" onMouseDown={e=>startResize(ci,e)}/></th>)}
-</tr></thead><tbody>{voFilt.map((v,vi)=>{const mg=v.pr-v.em-v.pf;const rc=voRowColor(v.st);return<tr key={v.i} style={{color:rc}}>
+{["","Project","Type","Var No.","Name","Date Sub.","Date Appr.","Price","Status","Ext.Mat","PFAB","Margin","#Men","NHrs","NRate","OTHrs","OTRate","Notes"].map((h,ci)=><th key={h} className={ci===0?"":ci<9?"tg":ci<12?"ty":ci<17?"tp":"tg"} style={{width:colW[ci],minWidth:40,...(ci>=7&&ci!==8?{textAlign:"right"}:{})}}>{h}<div className="col-resize" onMouseDown={e=>startResize(ci,e)}/></th>)}
+</tr></thead><tbody>{voFilt.map((v,vi)=>{const mg=v.pr-v.em-v.pf;const rc=voRowColor(v.st);return<tr key={v.i} style={{color:rc}}><td style={{textAlign:"center",padding:0,width:24}}><button onClick={()=>dVO(v.i)} style={{background:"none",border:"none",color:"var(--rd)",cursor:"pointer",fontSize:14,fontWeight:700,opacity:.4}} onMouseEnter={e=>e.target.style.opacity=1} onMouseLeave={e=>e.target.style.opacity=.4} title="Delete">×</button></td>
 <td><input list={"pl"+v.i} value={v.pj} onChange={e=>uV(v.i,"pj",e.target.value)} style={{color:rc,width:"100%"}}/><datalist id={"pl"+v.i}>{pj.filter(p=>!p.nm.startsWith("_")).map(p=><option key={p.nm} value={p.nm}/>)}</datalist></td>
 <td><select value={v.ty} onChange={e=>uV(v.i,"ty",e.target.value)} style={{background:"transparent",border:"none",color:rc,fontSize:10,width:"100%"}}><option>VO</option><option>DL</option></select></td>
 <td><input value={v.vn} onChange={e=>uV(v.i,"vn",e.target.value)} style={{color:rc}}/></td>
