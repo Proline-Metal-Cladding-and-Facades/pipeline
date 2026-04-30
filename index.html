@@ -51,8 +51,8 @@
 .pg{display:contents}
 /* Project row = Sales merged */
 .pr{display:contents}
-.pr>div{padding:4px 6px;font-size:9px;font-weight:700;background:#f4f7fc!important;font-family:var(--mn);border-top:0.5px solid #e4e6eb;border-bottom:0.5px solid #e4e6eb;text-align:right;font-family:var(--mn)}
-.pr>div:first-child{text-align:left;position:sticky;left:0;z-index:3;background:#f4f7fc!important;font-family:var(--ft);display:flex;align-items:flex-start;justify-content:flex-start;gap:2px;min-width:160px;padding-left:4px!important}
+.pr>div{padding:4px 6px;font-size:9px;font-weight:700;background:#f9f9f7!important;font-family:var(--mn);border-top:0.5px solid #e4e6eb;border-bottom:0.5px solid #e4e6eb;text-align:right;font-family:var(--mn)}
+.pr>div:first-child{text-align:left;position:sticky;left:0;z-index:3;background:#f9f9f7!important;font-family:var(--ft);display:flex;align-items:flex-start;justify-content:flex-start;gap:2px;min-width:160px;padding-left:4px!important}
 .eb{background:none;border:1px solid var(--bd);color:var(--t2);cursor:pointer;font-size:9px;border-radius:3px;padding:0 4px;font-weight:700;font-family:var(--mn);line-height:16px;flex-shrink:0}
 .eb:hover{color:var(--ac);border-color:var(--ac)}
 .xb{background:none;border:none;color:var(--t2);cursor:pointer;font-size:11px;opacity:.3;padding:0 1px;flex-shrink:0}.xb:hover{color:var(--rd);opacity:1}
@@ -70,8 +70,8 @@
 .rg>div:nth-child(1){color:var(--gn)!important}
 /* Cells */
 .cl{padding:2px 3px;min-height:14px;font-variant-numeric:tabular-nums;cursor:pointer;border-radius:2px;font-family:var(--mn);font-size:9px;text-align:right}
-.cl:hover{background:rgba(91,141,239,.06)}.cs{color:var(--ac)}.cc{color:#c45e10}
-.ce{color:var(--ac);border-bottom:1px dashed rgba(68,114,196,.4)}.ce:hover{background:rgba(68,114,196,.08)}
+.cl:hover{background:rgba(91,141,239,.06)}.cs{color:#3a3f4a}.cc{color:#3a3f4a}
+.ce{color:#3a3f4a;border-bottom:1px dashed rgba(58,63,74,.3)}.ce:hover{background:rgba(58,63,74,.06)}
 .ci{width:100%;background:var(--bg);border:1px solid var(--ac);color:var(--tx);font-family:var(--mn);font-size:9px;padding:2px 3px;border-radius:2px;outline:none;text-align:right}
 .ld{display:flex;flex-direction:column;align-items:center;padding:40px;gap:8px}.ld p{font-size:11px;color:var(--t2)}
 .sp{width:22px;height:22px;border:2px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:sn .7s linear infinite}
@@ -140,7 +140,7 @@
 .gh>div:nth-child(-n+7){z-index:6}
 /* Backgrounds must be opaque for freeze to work */
 .gh>div:nth-child(-n+7){background:var(--s2)}
-.pr>div:nth-child(-n+7){background:#f4f7fc!important}
+.pr>div:nth-child(-n+7){background:#f9f9f7!important}
 .rw>div:nth-child(-n+7),.rg>div:nth-child(-n+7){background:#fff!important}
 
 /* Center monthly columns */
@@ -170,8 +170,8 @@
 .sb-divider{height:1px;background:var(--bd);margin:8px 16px}
 .sb-footer{padding:10px 16px;font-size:9px;color:var(--t2);border-top:1px solid var(--bd)}
 /* Alternate row shading */
-.pg:nth-child(even) .pr>div{background:#fef9f4!important}
-.pg:nth-child(even) .pr>div:nth-child(-n+7){background:#fef9f4!important}
+.pg:nth-child(even) .pr>div{background:#f9f9f7!important}
+.pg:nth-child(even) .pr>div:nth-child(-n+7){background:#f9f9f7!important}
 /* Current month highlight */
 .cur-month{background:var(--ac)!important;color:#fff!important;border-left:2px solid var(--ac)!important;border-right:2px solid var(--ac)!important;font-weight:800!important}
 /* Status filter */
@@ -202,8 +202,8 @@
 .vt tr:hover td:first-child{background:rgba(68,114,196,.08)}
 
 
-.pg:nth-child(odd) .pr>div{background:#f4f7fc!important}
-.pg:nth-child(even) .pr>div{background:#fef9f4!important}
+.pg:nth-child(odd) .pr>div{background:#f9f9f7!important}
+.pg:nth-child(even) .pr>div{background:#f9f9f7!important}
 
 .rw>div,.rg>div{background:#fff!important}
 .rw>div:nth-child(n+8),.rg>div:nth-child(n+8){background:#fff!important}
@@ -453,8 +453,8 @@ return<div className="pg" key={p.i}>
 <div className={hovOn&&hovR===p.nm?"rh":""}><EC value={p.cp} onChange={v=>uP(p.nm,"Contract Price",v)} cls="cl ce" tentative={isTent(p.nm,"_","cp")} onContext={()=>togTent(p.nm,"_","cp")}/></div>
 <div className={hovOn&&hovR===p.nm?"rh":""}><EC value={p.v} onChange={v=>uP(p.nm,"Variations",v)} cls="cl ce" tentative={isTent(p.nm,"_","var")} onContext={()=>togTent(p.nm,"_","var")}/></div>
 <div className={hovOn&&hovR===p.nm?"rh":""} style={{color:"var(--pu)",fontStyle:"italic",fontFamily:"var(--mn)"}}>{p.avo?fm(p.avo):"-"}</div>
-<div className={hovOn&&hovR===p.nm?"rh":""} style={{fontWeight:800,fontFamily:"var(--mn)"}}>{fm(p.tot)}</div>
-<div className={hovOn&&hovR===p.nm?"rh":""} style={{fontFamily:"var(--mn)"}}>{fm(p.sT)}</div>
+<div className={hovOn&&hovR===p.nm?"rh":""} style={{fontFamily:"var(--mn)",color:"#3a3f4a"}}>{fm(p.tot)}</div>
+<div className={hovOn&&hovR===p.nm?"rh":""} style={{fontFamily:"var(--mn)",color:"#3a3f4a"}}>{fm(p.sT)}</div>
 <div className={hovOn&&hovR===p.nm?"rh":""} style={{color:p.tba<0?"var(--rd)":p.tba>0?"var(--am)":"var(--gn)",fontFamily:"var(--mn)"}}>{fm(p.tba)}</div>
 {vis.map(m=><div key={m} className={(hovOn&&hovR===p.nm?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{hovOn&&sHR(p.nm);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.06)"}:null}><EC value={gv(p.nm,m,"Sales")} onChange={val=>uC(p.nm,m,"Sales",val)} cls="cl cs" tentative={isTent(p.nm,m,"Sales")} onContext={()=>togTent(p.nm,m,"Sales")}/></div>)}
 </div>
@@ -469,13 +469,13 @@ return<div className={"rw r"+(ri+1)} key={rk}><div className="rl">{RN[ri]}</div>
 <div><EC value={bCon} onChange={v=>uC(p.nm,"_BC",rk,v)} cls="cl ce" tentative={isTent(p.nm,"_BC",rk)} onContext={()=>togTent(p.nm,"_BC",rk)}/></div>
 <div><EC value={bVar} onChange={v=>uC(p.nm,"_BV",rk,v)} cls="cl ce" tentative={isTent(p.nm,"_BV",rk)} onContext={()=>togTent(p.nm,"_BV",rk)}/></div>
 <div style={{fontFamily:"var(--mn)",color:"var(--pu)",fontStyle:"italic"}}>{avoC?fm(avoC):"-"}</div>
-<div style={{fontFamily:"var(--mn)",color:"#c45e10"}}>{(cTot||cClaimed)?fm(cTot):""}</div>
-<div style={{fontFamily:"var(--mn)",color:"#c45e10"}}>{fm(cClaimed)}</div>
+<div style={{fontFamily:"var(--mn)",color:"#3a3f4a"}}>{(cTot||cClaimed)?fm(cTot):""}</div>
+<div style={{fontFamily:"var(--mn)",color:"#3a3f4a"}}>{fm(cClaimed)}</div>
 <div style={{fontFamily:"var(--mn)",color:cTba<0?"var(--rd)":cTba>0?"var(--am)":"var(--gn)"}}>{(cTot||cClaimed)?fm(cTba):""}</div>
 {vis.map(m=><div key={m} className={(hovOn&&hovR===p.nm?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{hovOn&&sHR(p.nm);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.06)"}:null}><EC value={gv(p.nm,m,rk)} onChange={val=>uC(p.nm,m,rk,val)} cls="cl cc" tentative={isTent(p.nm,m,rk)} onContext={()=>togTent(p.nm,m,rk)}/></div>)}</div>})}
 <div className="rg"><div className="rl">Gross Profit</div><div/><div/><div/>
-<div style={{fontFamily:"var(--mn)",color:p.gp<0?"var(--rd)":"var(--gn)"}}>{fm(p.gp)}</div><div/><div/>
-{vis.map(m=>{const v=gpM(m);return<div key={m} className={(hovOn&&hovR===p.nm?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{hovOn&&sHR(p.nm);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{...(m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.06)"}:{}),fontFamily:"var(--mn)",fontSize:9,color:v<0?"var(--rd)":"var(--gn)"}}>{v?fm(v):""}</div>})}</div>
+<div style={{fontFamily:"var(--mn)",color:"#3a3f4a"}}>{fm(p.gp)}</div><div/><div/>
+{vis.map(m=>{const v=gpM(m);return<div key={m} className={(hovOn&&hovR===p.nm?"rh":"")+" "+(hovOn&&hovC===m?"ch":"")+(m===CUR_M?" cm-hl":"")} onMouseEnter={()=>{hovOn&&sHR(p.nm);hovOn&&sHC(m)}} onMouseLeave={()=>{sHR(null);sHC(null)}} style={{...(m===CUR_M?{borderLeft:"2px solid var(--ac)",borderRight:"2px solid var(--ac)",background:"rgba(68,114,196,.06)"}:{}),fontFamily:"var(--mn)",fontSize:9,color:"#3a3f4a"}}>{v?fm(v):""}</div>})}</div>
 </>}
 </div>})}
 </div></div>
@@ -641,4 +641,3 @@ return<div className="pr pr-pf" key={p.i}>
 </div>}
 ReactDOM.render(<App/>,document.getElementById("root"));
 </script></body></html>
-
